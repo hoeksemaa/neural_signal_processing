@@ -8,11 +8,13 @@ doing my best :)
 
 ## Data
 
-following [this tutorial](https://www.youtube.com/watch?v=8xeC5CV4UB8&list=PL05umP7R6ij3SxudmSWFL_zGh0BMrRdrx&ab_channel=T%C3%BCbingenMachineLearning)
+following [this lecture series](https://www.youtube.com/watch?v=8xeC5CV4UB8&list=PL05umP7R6ij3SxudmSWFL_zGh0BMrRdrx&ab_channel=T%C3%BCbingenMachineLearning)
 
 replicating [these labs](https://github.com/berenslab/neural_data_science/tree/main)
 
 [data source](https://zenodo.org/record/4704658)
+
+[helpful markdown cheatsheet for future john](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet#links)
 
 ## lmao
 

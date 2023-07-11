@@ -34,11 +34,11 @@ def filterSignal(x, Fs, low, high):
 
 xf = filterSignal(x, Fs, 500, 4000)
 
-plt.figure(figsize=(14, 8))
+#plt.figure(figsize=(14, 8))
 
 T = 100000
 t = np.arange(0,T) * dt 
-
+"""
 for i, col in enumerate(xf):
     plt.subplot(4,2,2*i+1)
     plt.plot(t,x[col][0:T],linewidth=.5)
@@ -51,6 +51,43 @@ for i, col in enumerate(xf):
     plt.plot(t,xf[col][0:T],linewidth=.5)
     plt.ylim((-400, 250))
     plt.xlim((0,3))
+    plt.ylabel('Voltage')
+
+plt.show()
+"""
+def robust_std_dev(column):
+    median_val = np.median(column)
+    mad = np.median(np.abs(column - median_val) / 0.6745 )
+    return mad
+
+def detectSpikes(x,Fs):
+# Detect spikes
+# s, t = detectSpikes(x,Fs) detects spikes in x, where Fs the sampling
+#   rate (in Hz). The outputs s and t are column vectors of spike times in
+#   samples and ms, respectively. By convention the time of the zeroth
+#   sample is 0 ms.
+    print(x.shape)
+    #for column in x:
+    #    print(robust_std_dev(column))
+    for i in range(x.shape[1]):
+        column = x[:, i]
+        print(robust_std_dev(column))
+
+    return (s, t)
+
+T = xf.shape[0]
+s, t = detectSpikes(xf.values,Fs)
+
+plt.figure(figsize=(7, 8))
+
+tt = np.arange(0,T) * dt
+
+for i, col in enumerate(xf):
+    plt.subplot(4,1,i+1)
+    plt.plot(tt,xf[col],linewidth=.5)
+    plt.plot(tt[s],xf[col][s],'r.')
+    plt.ylim((-400, 400))
+    plt.xlim((0.025,0.075))
     plt.ylabel('Voltage')
 
 plt.show()

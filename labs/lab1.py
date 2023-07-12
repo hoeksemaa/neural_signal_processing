@@ -60,18 +60,44 @@ def robust_std_dev(column):
     mad = np.median(np.abs(column - median_val) / 0.6745 )
     return mad
 
+def check_adjacent_values(column):
+    # Initialize a list to store the boolean results
+    results = []
+
+    # Iterate over the column starting from the second element and ending at the second-to-last element
+    for i in range(1, len(column) - 1):
+        # Check the condition for the current element
+        condition = column[i] <= column[i-1] and column[i] <= column[i+1]
+        
+        # Append the result to the list
+        if condition:
+            results.append(i)
+
+    # Return the list of boolean results
+    return results
+
 def detectSpikes(x,Fs):
 # Detect spikes
 # s, t = detectSpikes(x,Fs) detects spikes in x, where Fs the sampling
 #   rate (in Hz). The outputs s and t are column vectors of spike times in
 #   samples and ms, respectively. By convention the time of the zeroth
 #   sample is 0 ms.
-    print(x.shape)
-    #for column in x:
-    #    print(robust_std_dev(column))
+
+    s = []
+    t = []
+    dt = 1/Fs
+
     for i in range(x.shape[1]):
         column = x[:, i]
-        print(robust_std_dev(column))
+        std_dev = robust_std_dev(column)
+        threshold = -std_dev * 3.5
+        print("checking lowest points")
+        lowest_points = check_adjacent_values(column)
+        print(lowest_points)
+        print("evaluating threshold")
+        indices = np.where((column < threshold) & np.isin(np.arange(len(column)), lowest_points))[0].tolist()
+        s.append(indices)
+        t.append([i * dt for i in indices])
 
     return (s, t)
 
@@ -85,7 +111,7 @@ tt = np.arange(0,T) * dt
 for i, col in enumerate(xf):
     plt.subplot(4,1,i+1)
     plt.plot(tt,xf[col],linewidth=.5)
-    plt.plot(tt[s],xf[col][s],'r.')
+    plt.plot(tt[s[i]],xf[col][s[i]],'r.')
     plt.ylim((-400, 400))
     plt.xlim((0.025,0.075))
     plt.ylabel('Voltage')

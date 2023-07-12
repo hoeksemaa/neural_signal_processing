@@ -91,10 +91,10 @@ def detectSpikes(x,Fs):
         column = x[:, i]
         std_dev = robust_std_dev(column)
         threshold = -std_dev * 3.5
-        print("checking lowest points")
+        #print("checking lowest points")
         lowest_points = check_adjacent_values(column)
-        print(lowest_points)
-        print("evaluating threshold")
+        #print(lowest_points)
+        #print("evaluating threshold")
         indices = np.where((column < threshold) & np.isin(np.arange(len(column)), lowest_points))[0].tolist()
         s.append(indices)
         t.append([i * dt for i in indices])
@@ -104,10 +104,10 @@ def detectSpikes(x,Fs):
 T = xf.shape[0]
 s, t = detectSpikes(xf.values,Fs)
 
-plt.figure(figsize=(7, 8))
+#plt.figure(figsize=(7, 8))
 
 tt = np.arange(0,T) * dt
-
+"""
 for i, col in enumerate(xf):
     plt.subplot(4,1,i+1)
     plt.plot(tt,xf[col],linewidth=.5)
@@ -117,3 +117,48 @@ for i, col in enumerate(xf):
     plt.ylabel('Voltage')
 
 plt.show()
+"""
+
+def extractWaveforms(x, s):
+# Extract spike waveforms.
+#   w = extractWaveforms(x, s) extracts the waveforms at times s (given in
+#   samples) from the filtered signal x using a fixed window around the
+#   times of the spikes. The return value w is a 3d array of size
+#   length(window) x #spikes x #channels.
+
+
+    return w
+
+w = extractWaveforms(xf.as_matrix(),s)
+
+"""
+t = np.arange(-10,20) * dt * 1000
+
+plt.figure(figsize=(11, 8))
+
+for i, col in enumerate(xf):
+    plt.subplot(2,2,i+1)
+    plt.plot(t,w[:,1:100,i],'k', linewidth=1)
+    plt.ylim((-500, 250))
+    plt.xlim((-0.33,0.66))
+    plt.ylabel('Voltage')
+
+plt.show()
+"""
+
+"""
+idx = np.argsort(np.min(np.min(w,axis=2),axis=0))
+
+
+t = np.arange(-10,20) * dt * 1000
+
+plt.figure(figsize=(11, 8))
+for i, col in enumerate(xf):
+    plt.subplot(2,2,i+1)
+    plt.plot(t,w[:,idx[0:100],i],'k', linewidth=1)
+    plt.ylim((-1000, 500))
+    plt.xlim((-0.33,0.66))
+    plt.ylabel('Voltage')
+
+plt.show()
+"""

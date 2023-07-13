@@ -32,6 +32,8 @@ def filterSignal(x, Fs, low, high):
 
     return y
 
+print("filtering signal")
+
 xf = filterSignal(x, Fs, 500, 4000)
 
 #plt.figure(figsize=(14, 8))
@@ -101,6 +103,8 @@ def detectSpikes(x,Fs):
 
     return (s, t)
 
+print("detecting spikes")
+
 T = xf.shape[0]
 s, t = detectSpikes(xf.values,Fs)
 
@@ -119,32 +123,35 @@ for i, col in enumerate(xf):
 plt.show()
 """
 
-def extractWaveforms(x, s):
+def extractWaveforms(x, s, dt):
 # Extract spike waveforms.
 #   w = extractWaveforms(x, s) extracts the waveforms at times s (given in
 #   samples) from the filtered signal x using a fixed window around the
 #   times of the spikes. The return value w is a 3d array of size
 #   length(window) x #spikes x #channels.
+    w = []
 
-
+    for row in range(len(s)):
+        waveforms = [x[index-(round(10 / dt)): index+(round(20 / dt))] for index in s[row]]
+        w[row] = waveforms
     return w
 
-w = extractWaveforms(xf.as_matrix(),s)
+print("extracting waveforms")
 
-"""
+w = extractWaveforms(xf.values,s, dt)
+
 t = np.arange(-10,20) * dt * 1000
 
 plt.figure(figsize=(11, 8))
 
 for i, col in enumerate(xf):
     plt.subplot(2,2,i+1)
-    plt.plot(t,w[:,1:100,i],'k', linewidth=1)
+    plt.plot(t,w[i][:,1:100],'k', linewidth=1)
     plt.ylim((-500, 250))
     plt.xlim((-0.33,0.66))
     plt.ylabel('Voltage')
 
 plt.show()
-"""
 
 """
 idx = np.argsort(np.min(np.min(w,axis=2),axis=0))
